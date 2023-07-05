@@ -54,7 +54,8 @@ body {
 }
 
 .user_answer {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     border: 2px solid;
     border-top: 1px solid;
     border-bottom: 1px solid;
@@ -81,6 +82,14 @@ button {
     transform: translate(-50%, 0);
     top: 1px;
 }
+[id^="button_prev_№"], [id^="button_next_№"]{
+    width: 150px;
+    height: 40px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 1px;
+}
 
 .write {
     position: relative;
@@ -92,6 +101,18 @@ button {
     transform: translate(-50%, 0);
 }
 
-#button_prev {}
+.check {
+    align-items: center;
+    word-break: break-all;
+    display: grid;
+    padding: 10px;
+    gap: 5px;
+    grid-template-columns: 30px 1fr;
+    grid-template-rows: auto;
+}
 
-#button_next {}
+input[type="radio"],
+input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+}
