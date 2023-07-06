@@ -6,7 +6,7 @@ body {
     background-attachment: fixed;
 }
 
-.main{
+.main {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -16,7 +16,7 @@ body {
     display: grid;
     /* display: none; */
     grid-template-rows: 50% 50%;
-    width: 275px;
+    width: 280px;
     height: 150px;
     background-color: gray;
     position: absolute;
@@ -26,17 +26,16 @@ body {
     border-radius: 20px;
 }
 
+.file {
+    align-self: center;
+    padding: 10% 10% 10% 10%;
+}
+
 .description {
     text-align: center;
 }
 
-#button_load_questions {
-    position: relative;
-    left: 50%;
-    transform: translate(-50%, 0);
-}
-
-.block_teleport{
+.block_teleport {
     display: none;
     background-color: gray;
     /* display: grid; */
@@ -48,28 +47,27 @@ body {
     top: 30%;
 }
 
-.block_teleport_head{
+.block_teleport_head {
     display: grid;
     grid-template-rows: 50% 50%;
 }
 
-.block_teleport_body{
+.block_teleport_body {
     text-align: center;
     display: grid;
     gap: 3px;
     align-items: center;
-    /* grid-template-columns: repeat(16,1fr); */
-    /* grid-template-rows: repeat(9,1fr); */
 }
 
-.quest_num{
+.quest_num {
     border: 1px solid;
 }
-.quest_num:hover{
+
+.quest_num:hover {
     background-color: yellow;
 }
 
-.quest_num:active{
+.quest_num:active {
     background-color: white;
     opacity: 0.5;
 }
@@ -117,6 +115,15 @@ button {
     background: linear-gradient(gray, white);
 }
 
+#button_start{
+    width: 150px;
+    height: 40px;
+    align-self: center;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
 #button_prev,
 #button_next {
     width: 150px;
@@ -126,7 +133,9 @@ button {
     transform: translate(-50%, 0);
     top: 1px;
 }
-[id^="button_prev_№"], [id^="button_next_№"]{
+
+[id^="button_prev_№"],
+[id^="button_next_№"] {
     width: 150px;
     height: 40px;
     position: relative;
