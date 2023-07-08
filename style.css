@@ -1,6 +1,5 @@
 body {
-    background: linear-gradient(to bottom, rgb(68, 216, 68), rgb(221, 221, 221));
-    /*    background:radial-gradient(ellipse ,white,rgb(0, 155, 0)); */
+    background: linear-gradient(to bottom, rgb(63, 155, 197), rgb(221, 221, 221));
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -14,11 +13,11 @@ body {
 
 .load_questions {
     display: grid;
-    /* display: none; */
+    border: 2px solid;
     grid-template-rows: 50% 50%;
     width: 280px;
     height: 150px;
-    background-color: gray;
+    background-color: rgb(226, 220, 208);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -32,13 +31,15 @@ body {
 }
 
 .description {
+    border-bottom: 1px solid;
     text-align: center;
 }
 
 .block_teleport {
     display: none;
-    background-color: gray;
-    /* display: grid; */
+    background-color: rgb(226, 220, 208);
+    border: 2px solid;
+    border-radius: 20px;
     grid-template-rows: 20% 80%;
     width: 275px;
     height: 300px;
@@ -60,11 +61,14 @@ body {
 }
 
 .quest_num {
+    margin-left: 10px;
+    margin-right: 10px;
+    user-select: none;
     border: 1px solid;
 }
 
 .quest_num:hover {
-    background-color: yellow;
+    background-color: rgb(255, 255, 255) !important;
 }
 
 .quest_num:active {
@@ -73,12 +77,11 @@ body {
 }
 
 .block_questions {
-    /* display: grid; */
     display: none;
     grid-template-rows: 35% 55% 10%;
     width: 900px;
     height: 450px;
-    background-color: gray;
+    background-color: rgb(226, 220, 208);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -179,8 +182,8 @@ input[type="checkbox"] {
     width: 350px;
     height: 120px;
     display: none;
-    background-color: rgba(255, 255, 255, 1);
-    top: 30%;
+    background-color: rgb(226, 220, 208);
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
 

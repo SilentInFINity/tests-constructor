@@ -22,7 +22,7 @@
         div_main.appendChild(div_block_questions);
         let div_question = document.createElement("div");
         div_question.classList.add("question");
-        div_question.innerHTML = tasks[current_task].text_task;
+        div_question.innerHTML = tasks[current_task].num + "<br>" + tasks[current_task].text_task;
         div_block_questions.appendChild(div_question);
         let div_userAnswer = document.createElement("div");
         div_userAnswer.classList.add("user_answer");
@@ -136,6 +136,11 @@
         else {
             let button = document.getElementById(`button_next_№${current_task}`);
             checkAnswers();
+            button.remove();
+            let elements = document.querySelectorAll(".user_answer");
+            for (const q of elements) {
+                q.style.pointerEvents = "none";
+            }
         }
     }
 
@@ -148,9 +153,12 @@
     }
 
     function checkAnswers() {
-        let k = 0;
+        let f2 = false;
         for (let i = 0; i < tasks.length; i++) {
+            let k = 0;
+            let k2 = 0;
             let check = document.getElementById(`№${i + 1}`);
+            let quest_num = document.getElementById(`num_№${i + 1}`);
             if (check.classList.contains("check")) {
                 const ans_radio = document.querySelectorAll(`input[name = "${tasks[i].num}"][type = "radio"]`)
                 const ans_box = document.querySelectorAll(`input[name = "${tasks[i].num}"][type = "checkbox"]`)
@@ -158,24 +166,48 @@
                     for (const f of ans_box) {
                         if (f.checked && tasks[i].correct_answers.includes(f.value)) {
                             k++;
+
                         }
                         if (f.checked && !tasks[i].correct_answers.includes(f.value)) {
                             k--;
+                            f2 = true;
                         }
                     }
                     if (k > 0) {
                         score += (k / tasks[i].correct_answers.length);
                     }
-                }
-                for (const f of ans_radio) {
-                    if (f.checked && tasks[i].correct_answers.includes(f.value)) {
-                        score++;
+                    if (k == tasks[i].correct_answers.length) {
+                        quest_num.style.background = "green";
+                    }
+                    else if (k == 0 && f2) {
+                        quest_num.style.background = "yellow";
+                    }
+                    else if (k > 0) {
+                        quest_num.style.background = "yellow";
+                    }
+                    else if (k <= 0) {
+                        quest_num.style.background = "#B40000";
+                    }
+                } else {
+                    for (const f of ans_radio) {
+                        if (f.checked && tasks[i].correct_answers.includes(f.value)) {
+                            k2++;
+                            score += k2;
+                        }
+                    }
+                    if (k2 > 0) {
+                        quest_num.style.backgroundColor = "green";
+                    } else {
+                        quest_num.style.backgroundColor = "#B40000";
                     }
                 }
             }
             else {
                 if (tasks[i].correct_answers.includes(check.value)) {
+                    quest_num.style.background = "green";
                     score++;
+                } else {
+                    quest_num.style.background = "#B40000";
                 }
             }
         }
@@ -206,6 +238,8 @@
         let div_quest = document.createElement("div");
         div_quest.style.textAlign = "center";
         div_quest.innerHTML = "Задания";
+        div_quest.style.borderTop = "1px dashed";
+        div_quest.style.borderBottom = "2px solid";
         block_teleport_head.appendChild(div_quest);
         for (let i = 0; i < tasks.length; i++) {
             let div_quest_num = document.createElement("div");
@@ -237,7 +271,6 @@
         current_block_task = num;
         div_block_questions = document.getElementById("block_questions_" + current_block_task);
         div_block_questions.style.display = "grid";
-
     }
 
     function info() {
@@ -286,7 +319,7 @@
                 (sec > 9 ? sec : "0" + sec);
             if (hours == 0 && minutes == 0 && sec == 0) {
                 clearInterval(timer);
-                save_results();
+                checkAnswers();
             }
         }, 1000)
     }
@@ -306,6 +339,7 @@
         modal_grid.appendChild(document.createElement("div"));
         let form = document.createElement("form");
         form.method = "post";
+        //адрес отправки результата
         form.action = "#";
         modal_grid.appendChild(form);
         let hidden_input = document.createElement("input");
@@ -320,7 +354,7 @@
         button_retry.type = "button";
         button_retry.id = "retry";
         button_retry.innerHTML = "Повторить";
-        button_grid.onclick = function(){
+        button_grid.onclick = function () {
             location.reload();
         };
         button_grid.appendChild(button_retry);
@@ -328,14 +362,17 @@
         submit.type = "submit";
         button_grid.appendChild(submit);
         modal_window.style.display = "grid";
-        div_main.style.opacity = 0.6;
     }
 
     function save_results() {
         createResultsWindow();
-        let percent = score / tasks.length * 100 ;
+        score = score.toFixed(2);
+        let percent = score / tasks.length * 100;
+        percent = percent.toFixed(2);
+        percent = Number(percent);
         let modal_body = document.getElementById("modal_body");
-        modal_body.textContent = `Результат ${score} из ${tasks.length} (${percent}%)`;
+        modal_body.style.fontWeight = "bold";
+        modal_body.innerHTML = `<br>Результат ${score} из ${tasks.length} (${percent}%)`;
         let mark = document.getElementById("mark");
         mark.value = percent;
     }
