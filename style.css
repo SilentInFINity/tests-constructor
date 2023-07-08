@@ -111,11 +111,12 @@ body {
     border-radius: 0 0 20px 20px;
 }
 
-button {
+button,
+input[type="submit"] {
     background: linear-gradient(gray, white);
 }
 
-#button_start{
+#button_start {
     width: 150px;
     height: 40px;
     align-self: center;
@@ -168,4 +169,46 @@ input[type="radio"],
 input[type="checkbox"] {
     width: 15px;
     height: 15px;
+}
+
+.modal_window {
+    position: absolute;
+    z-index: 10;
+    border: 1px solid;
+    border-radius: 10px 10px 0 0;
+    width: 350px;
+    height: 120px;
+    display: none;
+    background-color: rgba(255, 255, 255, 1);
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.modal_body {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#submit {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+}
+
+.modal_grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 40% 30% 30%;
+}
+
+.button_grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
 }

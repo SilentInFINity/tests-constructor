@@ -134,10 +134,8 @@
             block.style.display = "grid";
         }
         else {
-            //Нужна функция для сохранения и отправки результата
             let button = document.getElementById(`button_next_№${current_task}`);
             checkAnswers();
-            return;
         }
     }
 
@@ -181,7 +179,8 @@
                 }
             }
         }
-        console.log(score);
+        clearInterval(timer);
+        save_results();
     }
 
     function createBlockTeleport() {
@@ -198,6 +197,11 @@
         block_teleport.appendChild(block_teleport_body);
         let div_time = document.createElement("div");
         div_time.id = "time";
+        div_time.style.textAlign = "center";
+        div_time.textContent =
+            (time[0] > 9 ? time[0] : "0" + time[0]) + ":" +
+            (time[1] > 9 ? time[1] : "0" + time[1]) + ":" +
+            "00";
         block_teleport_head.appendChild(div_time);
         let div_quest = document.createElement("div");
         div_quest.style.textAlign = "center";
@@ -222,9 +226,6 @@
         }
         y = (tasks.length) / x;
         block_teleport_body.style.cssText = `grid-template-rows: repeat(${y},1fr); grid-template-columns: repeat(${x},1fr);`;
-        block_teleport.style.display = "grid";
-        block_teleport.style.width = block_teleport_body.offsetWidth + "px";
-        console.log(block_teleport_body.offsetWidth)
     }
 
     function move(q) {
@@ -240,7 +241,7 @@
     }
 
     function info() {
-        let div_main = document.getElementById("main");
+        div_main = document.getElementById("main");
         let info = document.createElement("div");
         info.classList.add("load_questions");
         div_main.appendChild(info);
@@ -254,11 +255,90 @@
         info.appendChild(button_start);
         button_start.onclick = function () {
             let block_question_0 = document.getElementById("block_questions_0").style.display = "grid";
-            createBlockTeleport();
+            block_teleport.style.display = "grid";
+            let block_teleport_body = document.getElementsByClassName("block_teleport_body")
+            block_teleport.style.width = block_teleport_body.offsetWidth + "px";
+            start_timer();
             div_main.removeChild(info);
         };
     }
+    let timer;
+    function start_timer() {
+        let hours;
+        let minutes;
+        let sec = 0;
+        hours = time[0];
+        minutes = time[1];
+        div_time = document.getElementById("time");
+        timer = setInterval(function () {
+            if (sec == 0 && minutes != 0) {
+                minutes--;
+                sec = 60;
+                if (minutes == 0 && hours != 0) {
+                    hours--;
+                    minutes = 60;
+                }
+            }
+            sec--;
+            div_time.textContent =
+                (hours > 9 ? hours : "0" + hours) + ":" +
+                (minutes > 9 ? minutes : "0" + minutes) + ":" +
+                (sec > 9 ? sec : "0" + sec);
+            if (hours == 0 && minutes == 0 && sec == 0) {
+                clearInterval(timer);
+                save_results();
+            }
+        }, 1000)
+    }
 
+    function createResultsWindow() {
+        div_main = document.getElementById("main");
+        let modal_window = document.createElement("div");
+        modal_window.classList.add("modal_window");
+        document.body.appendChild(modal_window);
+        let modal_grid = document.createElement("div");
+        modal_grid.classList.add("modal_grid");
+        modal_window.appendChild(modal_grid);
+        let modal_body = document.createElement("div");
+        modal_body.classList.add("modal_body");
+        modal_body.id = ("modal_body");
+        modal_grid.appendChild(modal_body);
+        modal_grid.appendChild(document.createElement("div"));
+        let form = document.createElement("form");
+        form.method = "post";
+        form.action = "#";
+        modal_grid.appendChild(form);
+        let hidden_input = document.createElement("input");
+        hidden_input.name = "mark";
+        hidden_input.type = "hidden";
+        hidden_input.id = "mark";
+        form.appendChild(hidden_input);
+        let button_grid = document.createElement("div");
+        button_grid.classList.add("button_grid");
+        form.appendChild(button_grid);
+        let button_retry = document.createElement("button");
+        button_retry.type = "button";
+        button_retry.id = "retry";
+        button_retry.innerHTML = "Повторить";
+        button_grid.onclick = function(){
+            location.reload();
+        };
+        button_grid.appendChild(button_retry);
+        let submit = document.createElement("input");
+        submit.type = "submit";
+        button_grid.appendChild(submit);
+        modal_window.style.display = "grid";
+        div_main.style.opacity = 0.6;
+    }
+
+    function save_results() {
+        createResultsWindow();
+        let percent = score / tasks.length * 100 ;
+        let modal_body = document.getElementById("modal_body");
+        modal_body.textContent = `Результат ${score} из ${tasks.length} (${percent}%)`;
+        let mark = document.getElementById("mark");
+        mark.value = percent;
+    }
     let time;
     function main() {
         //Загрузка файла
@@ -270,6 +350,9 @@
                 let array = text.split("\n");
                 time = array.shift();
                 time = time.split(":");
+                for (let i = 0; i < time.length; i++) {
+                    time[i] = Number(time[i]);
+                }
                 for (let i = 0; i < array.length; i++) {
                     array[i] = array[i].split("|");
                 }
@@ -291,6 +374,7 @@
                 while (current_task != tasks.length) {
                     createBlockQuestions();
                 }
+                createBlockTeleport();
                 info();
             };
             reader.readAsText(file);
