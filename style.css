@@ -50,7 +50,7 @@ body {
 
 .block_teleport_head {
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 35% 25% 40%;
 }
 
 .block_teleport_body {
@@ -72,7 +72,6 @@ body {
 }
 
 .quest_num:active {
-    background-color: white;
     opacity: 0.5;
 }
 
@@ -99,6 +98,7 @@ body {
 }
 
 .user_answer {
+    display: grid;
     overflow-y: auto;
     overflow-x: hidden;
     border: 2px solid;
@@ -214,4 +214,43 @@ input[type="checkbox"] {
     height: 100%;
     display: grid;
     grid-template-columns: 50% 50%;
+}
+
+.back_later {
+    text-align: center;
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    border-top: 1px dashed;
+    user-select: none;
+    grid-template-areas: ". A .";
+}
+
+#back_later:hover {
+    background: linear-gradient(to bottom, white, gray);
+}
+
+#back_later:active {
+    opacity: 0.5;
+}
+
+#back_later {
+    grid-area: A;
+    border: 1px solid;
+    background: linear-gradient(to bottom, gray, white);
+}
+
+.back_later_color {
+    background-color: lightblue !important;
+}
+
+.red {
+    background-color: #B40000 !important;
+}
+
+.green {
+    background-color: green !important;
+}
+
+.yellow {
+    background-color: yellow !important;
 }

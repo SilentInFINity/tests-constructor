@@ -14,6 +14,7 @@
     let score = 0;
     let tasks = [];
 
+    //Функция для создания основных блоков
     function createBlockQuestions() {
         let div_main = document.getElementById("main");
         let div_block_questions = document.createElement("div");
@@ -47,9 +48,6 @@
         button_next.onclick = next;
         div1.appendChild(button_prev);
         div2.appendChild(button_next);
-        /*  if (current_task == 0) {
-             div_block_questions.style.display = "grid";
-         } */
         if (tasks[current_task].select == "false") {
             createBlockUserAnswerLine(div_userAnswer);
         }
@@ -113,6 +111,8 @@
 
         current_task++;
     }
+
+    //Функция для перемещения назад
     function prev() {
         if (current_block_task == 0) {
             return;
@@ -123,24 +123,71 @@
             current_block_task--;
             block = document.getElementById("block_questions_" + current_block_task);
             block.style.display = "grid";
+            autoFocus(block);
+            let num = document.getElementById("num_№" + (current_block_task + 2));
+            num.style.backgroundColor = "rgb(226, 220, 208)";
+            let num_prev = document.getElementById("num_№" + (current_block_task + 1));
+            if (num_prev.classList.contains("back_later_color")) {
+                num_prev.classList.remove("back_later_color");
+            }
+            num_prev.style.backgroundColor = "rgb(255, 202, 95)";
         }
     }
+
+    //Функция для перемещения вперёд
     function next() {
+        let isOK = true;
         if (current_block_task != current_task - 1) {
             let block = document.getElementById("block_questions_" + current_block_task);
             block.style.display = "none";
             current_block_task++;
             block = document.getElementById("block_questions_" + current_block_task);
             block.style.display = "grid";
+            autoFocus(block);
+            let num = document.getElementById("num_№" + (current_block_task + 1));
+            if (num.classList.contains("back_later_color")) {
+                num.classList.remove("back_later_color");
+            }
+            num.style.backgroundColor = "rgb(255, 202, 95)";
+            let num_prev = document.getElementById("num_№" + (current_block_task));
+            num_prev.style.backgroundColor = "rgb(226, 220, 208)";
+
         }
         else {
-            let button = document.getElementById(`button_next_№${current_task}`);
-            checkAnswers();
-            button.remove();
-            let elements = document.querySelectorAll(".user_answer");
-            for (const q of elements) {
-                q.style.pointerEvents = "none";
+            let nums = document.querySelectorAll(".quest_num");
+            for (const q of nums) {
+                if (q.classList.contains("back_later_color")) {
+                    isOK = confirm("Есть вопросы к которым вы хотели вернуться. \nВы уверены, что хотите закончить тест?");
+                    break;
+                }
             }
+            if (isOK) {
+                for (const q of nums) {
+                    if (q.classList.contains("back_later_color")) {
+                        q.classList.remove("back_later_color");
+                    }
+                }
+                let button = document.getElementById(`button_next_№${current_task}`);
+                checkAnswers();
+                button.remove();
+                let elements = document.querySelectorAll(".user_answer");
+                //Убираем возможность выделения элементов
+                toggle = false;
+                for (const q of elements) {
+                    q.style.pointerEvents = "none";
+                }
+            }
+        }
+    }
+
+    let toggle = true;
+    //Функция для автоматического выделения блоков с вводом ответа
+    function autoFocus(block) {
+        if (tasks[current_block_task].select == "false" && toggle) {
+            let id = Number(block.id.replace(/[^0-9]/g, ""));
+            id++;
+            let input_txt = document.getElementById("№" + id);
+            input_txt.focus();
         }
     }
 
@@ -152,6 +199,7 @@
         return arr;
     }
 
+    //Функция проверки ответов
     function checkAnswers() {
         let f2 = false;
         for (let i = 0; i < tasks.length; i++) {
@@ -177,16 +225,16 @@
                         score += (k / tasks[i].correct_answers.length);
                     }
                     if (k == tasks[i].correct_answers.length) {
-                        quest_num.style.background = "green";
+                        quest_num.classList.add("green");
                     }
                     else if (k == 0 && f2) {
-                        quest_num.style.background = "yellow";
+                        quest_num.classList.add("yellow");
                     }
                     else if (k > 0) {
-                        quest_num.style.background = "yellow";
+                        quest_num.classList.add("yellow");
                     }
                     else if (k <= 0) {
-                        quest_num.style.background = "#B40000";
+                        quest_num.classList.add("red");
                     }
                 } else {
                     for (const f of ans_radio) {
@@ -196,18 +244,18 @@
                         }
                     }
                     if (k2 > 0) {
-                        quest_num.style.backgroundColor = "green";
+                        quest_num.classList.add("green");
                     } else {
-                        quest_num.style.backgroundColor = "#B40000";
+                        quest_num.classList.add("red");
                     }
                 }
             }
             else {
                 if (tasks[i].correct_answers.includes(check.value)) {
-                    quest_num.style.background = "green";
+                    quest_num.classList.add("green");
                     score++;
                 } else {
-                    quest_num.style.background = "#B40000";
+                    quest_num.classList.add("red");
                 }
             }
         }
@@ -215,6 +263,8 @@
         save_results();
     }
 
+    let back_later_check = false;
+    //Функция для создания блока с перемещением по вопросам
     function createBlockTeleport() {
         let div_main = document.getElementById("main");
         let block_teleport = document.createElement("div");
@@ -230,6 +280,7 @@
         let div_time = document.createElement("div");
         div_time.id = "time";
         div_time.style.textAlign = "center";
+        transformTime();
         div_time.textContent =
             (time[0] > 9 ? time[0] : "0" + time[0]) + ":" +
             (time[1] > 9 ? time[1] : "0" + time[1]) + ":" +
@@ -239,8 +290,20 @@
         div_quest.style.textAlign = "center";
         div_quest.innerHTML = "Задания";
         div_quest.style.borderTop = "1px dashed";
-        div_quest.style.borderBottom = "2px solid";
+        div_quest.style.alignSelf = "center";
         block_teleport_head.appendChild(div_quest);
+        let div_back_later = document.createElement("div");
+        div_back_later.classList.add("back_later");
+        div_back_later.style.borderBottom = "2px solid";
+        block_teleport_head.appendChild(div_back_later);
+        let div_text_back = document.createElement("div");
+        div_text_back.innerHTML = "Вернуться к вопросу позже";
+        div_text_back.id = "back_later";
+        div_back_later.appendChild(div_text_back);
+        div_text_back.onclick = function () {
+            let num = document.getElementById("num_№" + (current_block_task + 1));
+            num.classList.add("back_later_color");
+        }
         for (let i = 0; i < tasks.length; i++) {
             let div_quest_num = document.createElement("div");
             div_quest_num.classList.add("quest_num");
@@ -260,19 +323,28 @@
         }
         y = (tasks.length) / x;
         block_teleport_body.style.cssText = `grid-template-rows: repeat(${y},1fr); grid-template-columns: repeat(${x},1fr);`;
+        let num_1 = document.getElementById("num_№1");
+        num_1.style.backgroundColor = "rgb(255, 202, 95)";
     }
 
-    function move(q) {
+    function move() {
+        this.style.backgroundColor = "rgb(255, 202, 95)";
+        if (this.classList.contains("back_later_color")) {
+            this.classList.remove("back_later_color");
+        }
         let num = this.id;
         num = Number(num.replace(/[^0-9]/g, ""));
         num--;
         let div_block_questions = document.getElementById("block_questions_" + current_block_task);
         div_block_questions.style.display = "none";
+        let num_prev = document.getElementById("num_№" + (current_block_task + 1));
+        num_prev.style.backgroundColor = "rgb(226, 220, 208)";
         current_block_task = num;
         div_block_questions = document.getElementById("block_questions_" + current_block_task);
         div_block_questions.style.display = "grid";
     }
 
+    //Функция для создания блока для старта теста
     function info() {
         div_main = document.getElementById("main");
         let info = document.createElement("div");
@@ -295,7 +367,16 @@
             div_main.removeChild(info);
         };
     }
+
+    function transformTime() {
+        if (time[1] > 60) {
+            time[0] += Math.trunc(time[1] / 60);
+            time[1] = time[1] % 60
+        }
+    }
+
     let timer;
+    //Функция для таймера
     function start_timer() {
         let hours;
         let minutes;
@@ -324,6 +405,7 @@
         }, 1000)
     }
 
+    //Функция для создания блока с результатом
     function createResultsWindow() {
         div_main = document.getElementById("main");
         let modal_window = document.createElement("div");
@@ -364,6 +446,7 @@
         modal_window.style.display = "grid";
     }
 
+    //Функция для подсчёта результата
     function save_results() {
         createResultsWindow();
         score = score.toFixed(2);
@@ -388,7 +471,7 @@
                 time = array.shift();
                 time = time.split(":");
                 for (let i = 0; i < time.length; i++) {
-                    time[i] = Number(time[i]);
+                    time[i] = Number(time[i].replace(/[^0-9]/g, ""));
                 }
                 for (let i = 0; i < array.length; i++) {
                     array[i] = array[i].split("|");
