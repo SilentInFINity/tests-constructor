@@ -342,6 +342,7 @@
         current_block_task = num;
         div_block_questions = document.getElementById("block_questions_" + current_block_task);
         div_block_questions.style.display = "grid";
+        autoFocus(div_block_questions);
     }
 
     //Функция для создания блока для старта теста
