@@ -312,17 +312,8 @@
             div_quest_num.onclick = move;
             block_teleport_body.appendChild(div_quest_num);
         }
-        let x, y;
-        x = tasks.length;
-        if (x % 2 != 0) x++;
-        for (let i = 10; i > 0; i--) {
-            if (x % i == 0) {
-                x /= i;
-                break;
-            }
-        }
-        y = (tasks.length) / x;
-        block_teleport_body.style.cssText = `grid-template-rows: repeat(${y},1fr); grid-template-columns: repeat(${x},1fr);`;
+        let x = Math.trunc(tasks.length/5) + 1;
+        block_teleport_body.style.cssText = `grid-template-rows: repeat(${x},1fr); grid-template-columns: repeat(${5},1fr);`;
         let num_1 = document.getElementById("num_№1");
         num_1.style.backgroundColor = "rgb(255, 202, 95)";
     }
@@ -362,8 +353,6 @@
         button_start.onclick = function () {
             let block_question_0 = document.getElementById("block_questions_0").style.display = "grid";
             block_teleport.style.display = "grid";
-            let block_teleport_body = document.getElementsByClassName("block_teleport_body")
-            block_teleport.style.width = block_teleport_body.offsetWidth + "px";
             start_timer();
             div_main.removeChild(info);
         };

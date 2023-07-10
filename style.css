@@ -9,6 +9,7 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
+    overflow: auto;
 }
 
 .load_questions {
@@ -41,7 +42,7 @@ body {
     border: 2px solid;
     border-radius: 20px;
     grid-template-rows: 20% 80%;
-    width: 275px;
+    width: 350px;
     height: 300px;
     position: absolute;
     left: 77%;
@@ -54,6 +55,7 @@ body {
 }
 
 .block_teleport_body {
+    overflow: auto;
     text-align: center;
     display: grid;
     gap: 3px;
